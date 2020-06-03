@@ -21,14 +21,16 @@ class MainWindow(QMainWindow):
 
     def createFileListDockPane(self):
         self.fileListWidget = QListWidget()
-        self.fileListWidget.itemClicked.connect(self.fileListItemClicked)
+        self.fileListWidget.currentRowChanged.connect(self.fileListCurrentRowChanged)
         self.fileListWidget.setMinimumHeight(300)
         self.fileListWidget.setSelectionMode(QAbstractItemView.SingleSelection)
 
         nextButton = QPushButton()
         nextButton.setText('Next Image')
+        nextButton.clicked.connect(self.nextFile)
         prevButton = QPushButton()
         prevButton.setText('Prev Image')
+        prevButton.clicked.connect(self.prevFile)
 
         hbox = QHBoxLayout()
         hbox.addWidget(prevButton)
@@ -141,8 +143,8 @@ class MainWindow(QMainWindow):
         fileList = self.driver.getCurrentDirectoryFileList()
         self.fileListWidget.addItems(fileList)
 
-    def fileListItemClicked(self, item):
-        filename = item.text()
+    def fileListCurrentRowChanged(self, currentRow):
+        filename = self.fileListWidget.item(currentRow).text()
         self.loadAndProcessImage(self.driver.getImageFullPath(filename))
 
     def exitApplicationAction(self):
@@ -247,6 +249,16 @@ class MainWindow(QMainWindow):
         if bubbleBoxes is not None:
             for id, box in bubbleBoxes.items():
                 self.graphicView.drawBox(id, box.xmin, box.ymin, box.width, box.height)
+
+    def nextFile(self):
+        row = self.fileListWidget.currentRow()
+        if row + 1 < self.fileListWidget.count():
+            self.fileListWidget.setCurrentRow(row + 1)
+
+    def prevFile(self):
+        row = self.fileListWidget.currentRow()
+        if row > 0 :
+            self.fileListWidget.setCurrentRow(row - 1)
 
 class LanguageSelection(QWidget):
     def __init__(self, labelText, languageList, parent=None):
