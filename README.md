@@ -20,13 +20,16 @@ This command below will installed all the dependency including prebuilt detectro
 
 For other platform or setup, you will need to compile your own detectron2.
 
-## Getting Microsoft translator API subscription key
+### Getting Microsoft translator API subscription key
 
 The program requires Microsoft translator API subscription key to run. You can sign up for free. It is free for under 2M char translated per month.
 Make sure that the location is **Global** when you create a service.
 
 https://docs.microsoft.com/en-us/azure/cognitive-services/translator/translator-how-to-signup
 
+### Download model pretrain weight
+
+Download the [model pretrain weight](https://www.dropbox.com/s/irpswfkx9bgsmlt/model_final.pth) and put it under rawmangareader\model directory.
 
 ## Running the program
 
