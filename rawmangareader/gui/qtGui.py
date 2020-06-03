@@ -1,4 +1,4 @@
-import sys, os
+import sys
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -128,8 +128,8 @@ class MainWindow(QMainWindow):
     def openFolderAction(self):
         """Open folder menu is selected. Open file dialog to ask the user the folder location.
         """
-        self.currentDirectory = QFileDialog.getExistingDirectory(self)
-        self.currentDirectory = self.currentDirectory.replace('/', '\\')
+        currentDirectory = QFileDialog.getExistingDirectory(self)
+        self.driver.setCurrentDirectory(currentDirectory)
         self.updateFileList()
 
     def updateFileList(self):
@@ -138,15 +138,12 @@ class MainWindow(QMainWindow):
         """
         self.fileListWidget.clear()
 
-        files = os.listdir(self.currentDirectory)
-        for file in files:
-            if os.path.isfile(os.path.join(self.currentDirectory, file)):
-                self.fileListWidget.addItem(file)
+        fileList = self.driver.getCurrentDirectoryFileList()
+        self.fileListWidget.addItems(fileList)
 
     def fileListItemClicked(self, item):
         filename = item.text()
-        fullFilePath = os.path.join(self.currentDirectory, filename)
-        self.loadAndProcessImage(fullFilePath)
+        self.loadAndProcessImage(self.driver.getImageFullPath(filename))
 
     def exitApplicationAction(self):
         sys.exit()

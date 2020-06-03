@@ -1,3 +1,4 @@
+import os
 import cv2
 from rawmangareader.engine.predict import Predictor
 from rawmangareader.engine.bubbletext import BubbleText
@@ -17,6 +18,7 @@ class Driver():
         self.bubbleTextBoxes = None
         self.translator = Translator()
         self.predictor = Predictor()
+        self.currentDirectory = None
 
     def hasSubscriptionKey(self):
         return self.translator.hasSubscriptionKey()
@@ -76,6 +78,13 @@ class Driver():
                 return 0
 
     def getBoxes(self):
+        """Return a cictionary of BubbleText.
+        Key is a string of bubble text box id.
+        Value is BubbleText box object.
+
+        Returns:
+            dict{BubbleText} -- Dictionary of BubbleText.
+        """
         if self.bubbleTextBoxes is None:
             self.loadBoxes()
 
@@ -105,5 +114,17 @@ class Driver():
     def setText(self, boxId, text):
         self.bubbleTextBoxes[str(boxId)].text = text
 
-    def addNewBox(self):
-        pass
+    def setCurrentDirectory(self, currentDirectory):
+        self.currentDirectory = currentDirectory.replace('/', '\\')
+
+    def getImageFullPath(self, filename):
+        return os.path.join(self.currentDirectory, filename)
+
+    def getCurrentDirectoryFileList(self):
+        files = os.listdir(self.currentDirectory)
+        ret = []
+        for file in files:
+            if os.path.isfile(os.path.join(self.currentDirectory, file)):
+                ret.append(file)
+
+        return ret
