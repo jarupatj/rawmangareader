@@ -143,8 +143,9 @@ class MainWindow(QMainWindow):
         self.fileListWidget.addItems(fileList)
 
     def fileListCurrentRowChanged(self, currentRow):
-        filename = self.fileListWidget.item(currentRow).text()
-        self.loadAndProcessImage(self.driver.getImageFullPath(filename))
+        if currentRow >= 0:
+            filename = self.fileListWidget.item(currentRow).text()
+            self.loadAndProcessImage(self.driver.getImageFullPath(filename))
 
     def exitApplicationAction(self):
         sys.exit()
