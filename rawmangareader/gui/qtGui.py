@@ -395,10 +395,11 @@ class SettingDialog(QDialog):
         self.subscriptionEdit = QLineEdit()
         self.subscriptionEdit.setText(settings.get(Driver.CONFIG_SUBSCRIPTION_KEY))
         self.useCudaCheckBox = QCheckBox('Use CUDA')
-        if settings.get(Driver.CONFIG_USE_CUDA) == 1:
+        if settings.get(Driver.CONFIG_USE_CUDA) == '1':
             self.useCudaCheckBox.setCheckState(Qt.Checked)
         else:
             self.useCudaCheckBox.setCheckState(Qt.Unchecked)
+        useCudaLabel = QLabel('Changing CUDA value requires program restart.')
 
         # OK and Cancel buttons
         buttons = QDialogButtonBox(
@@ -410,15 +411,15 @@ class SettingDialog(QDialog):
         layout = QVBoxLayout()
         layout.addWidget(subscriptionLabel)
         layout.addWidget(self.subscriptionEdit)
-        layout.addSpacing(15)
+        layout.addSpacing(12)
         layout.addWidget(self.useCudaCheckBox)
-        layout.addSpacing(15)
+        layout.addWidget(useCudaLabel)
+        layout.addSpacing(12)
         layout.addWidget(buttons)
         self.setLayout(layout)
 
     def getSettings(self):
         subscriptionKey = self.subscriptionEdit.text()
-        if self.useCudaCheckBox.checkState() == Qt.Checked:
-            useCuda = True
+        useCuda = '1' if (self.useCudaCheckBox.checkState() == Qt.Checked) else '0'
 
-        return {Driver.CONFIG_SUBSCRIPTION_KEY : subscriptionKey, Driver.CONFIG_USE_CUDA: 1 if useCuda else 0}
+        return { Driver.CONFIG_SUBSCRIPTION_KEY : subscriptionKey, Driver.CONFIG_USE_CUDA: useCuda }
