@@ -8,6 +8,11 @@ from rawmangareader.engine.translation import Translator
 from configparser import ConfigParser
 
 class Driver():
+    CONFIG_FILE_NAME = 'config.ini'
+    CONFIG_DEFAULT_SECTION = 'Default'
+    CONFIG_SUBSCRIPTION_KEY = 'SubscriptionKey'
+    CONFIG_USE_CUDA = 'UseCuda'
+
     @staticmethod
     def getSupportedLanguages():
         return Translator.getSupportedLanguages()
@@ -15,13 +20,13 @@ class Driver():
     def __init__(self):
         super().__init__()
         self.config = ConfigParser()
-        self.config.read('config.ini')
+        self.config.read(Driver.CONFIG_FILE_NAME)
 
         useCuda = False
         subscriptionKey = None
         try:
-            subscriptionKey = self.config.get('Default', 'SubscriptionKey')
-            useCuda = self.config.get('Default', 'UseCuda') == '1'
+            subscriptionKey = self.config.get(Driver.CONFIG_DEFAULT_SECTION, Driver.CONFIG_SUBSCRIPTION_KEY)
+            useCuda = self.config.get(Driver.CONFIG_DEFAULT_SECTION, Driver.CONFIG_USE_CUDA) == '1'
         except:
             pass
 
@@ -34,9 +39,6 @@ class Driver():
 
     def hasSubscriptionKey(self):
         return self.translator.hasSubscriptionKey()
-
-    def setTranslatorSubscriptionKey(self, subscriptionKey):
-        self.translator.setSubscriptionKey(subscriptionKey)
 
     def loadAndProcessImage(self, imagePath, fromLang, toLang):
         success = False
@@ -138,3 +140,19 @@ class Driver():
                 ret.append(file)
 
         return ret
+
+    def getSubscriptionKey(self):
+        return self.config.get(Driver.CONFIG_DEFAULT_SECTION, Driver.CONFIG_SUBSCRIPTION_KEY)
+
+    def updateSettings(self, settings):
+        for key, value in settings.items():
+            self.config.set(Driver.CONFIG_DEFAULT_SECTION, key, str(value))
+
+        with open(Driver.CONFIG_FILE_NAME, 'w') as configFile:
+            self.config.write(configFile)
+
+    def getSettings(self):
+        return {
+            Driver.CONFIG_SUBSCRIPTION_KEY : self.config.get(Driver.CONFIG_DEFAULT_SECTION, Driver.CONFIG_SUBSCRIPTION_KEY),
+            Driver.CONFIG_USE_CUDA : self.config.get(Driver.CONFIG_DEFAULT_SECTION, Driver.CONFIG_USE_CUDA)
+            }

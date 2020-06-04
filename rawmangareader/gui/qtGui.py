@@ -122,17 +122,18 @@ class MainWindow(QMainWindow):
     def settingAction(self):
         """Popup dialog box asking user for subscription key.
         """
-        text, ok = QInputDialog.getText(self, 'Setting', 'Microsoft Translator subscription key')
-
-        if ok and text:
-            self.driver.setTranslatorSubscriptionKey(text)
+        settingDialog = SettingDialog(self.driver.getSettings())
+        settingDialog.exec_()
+        settings = settingDialog.getSettings()
+        self.driver.updateSettings(settings)
 
     def openFolderAction(self):
         """Open folder menu is selected. Open file dialog to ask the user the folder location.
         """
         currentDirectory = QFileDialog.getExistingDirectory(self)
-        self.driver.setCurrentDirectory(currentDirectory)
-        self.updateFileList()
+        if currentDirectory is not None and currentDirectory is not '':
+            self.driver.setCurrentDirectory(currentDirectory)
+            self.updateFileList()
 
     def updateFileList(self):
         """Folder is selected. Update the file list UI with the list of file under
@@ -383,3 +384,41 @@ class RubberBand(QRubberBand):
         painter.drawText(event.rect(), Qt.AlignHCenter | Qt.AlignTop,  self.id)
 
         QRubberBand.paintEvent(self, event)
+
+class SettingDialog(QDialog):
+    def __init__(self, settings, parent=None):
+        super(QDialog, self).__init__(parent)
+
+        self.setWindowTitle("Settings")
+
+        subscriptionLabel = QLabel('Subscription key')
+        self.subscriptionEdit = QLineEdit()
+        self.subscriptionEdit.setText(settings.get(Driver.CONFIG_SUBSCRIPTION_KEY))
+        self.useCudaCheckBox = QCheckBox('Use CUDA')
+        if settings.get(Driver.CONFIG_USE_CUDA) == 1:
+            self.useCudaCheckBox.setCheckState(Qt.Checked)
+        else:
+            self.useCudaCheckBox.setCheckState(Qt.Unchecked)
+
+        # OK and Cancel buttons
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel,
+            Qt.Horizontal)
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+
+        layout = QVBoxLayout()
+        layout.addWidget(subscriptionLabel)
+        layout.addWidget(self.subscriptionEdit)
+        layout.addSpacing(15)
+        layout.addWidget(self.useCudaCheckBox)
+        layout.addSpacing(15)
+        layout.addWidget(buttons)
+        self.setLayout(layout)
+
+    def getSettings(self):
+        subscriptionKey = self.subscriptionEdit.text()
+        if self.useCudaCheckBox.checkState() == Qt.Checked:
+            useCuda = True
+
+        return {Driver.CONFIG_SUBSCRIPTION_KEY : subscriptionKey, Driver.CONFIG_USE_CUDA: 1 if useCuda else 0}
