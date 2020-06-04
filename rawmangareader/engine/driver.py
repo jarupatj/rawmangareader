@@ -40,7 +40,7 @@ class Driver():
     def hasSubscriptionKey(self):
         return self.translator.hasSubscriptionKey()
 
-    def loadAndProcessImage(self, imagePath, fromLang, toLang):
+    def loadAndProcessImage(self, imagePath, toLang, fromLang='ja'):
         success = False
         try:
             image = cv2.imread(imagePath)
@@ -49,7 +49,7 @@ class Driver():
                 self.image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 self.loadBoxes()
                 self.getOriginalTextForAllBoxes()
-                self.translateTextForAllBoxes(fromLang, toLang)
+                self.translateTextForAllBoxes(fromLang=fromLang, toLang=toLang)
                 success = True
         except Exception  as ex:
             print("***", ex)
@@ -116,9 +116,10 @@ class Driver():
                 text = extractTextFromBox(self.image_rgb, bubbleText.xmin, bubbleText.ymin, bubbleText.width, bubbleText.height)
                 bubbleText.text = text
 
-    def translateTextForAllBoxes(self, fromLang, toLang):
+    def translateTextForAllBoxes(self, toLang, fromLang='ja'):
         listOfStrings = [ bubbleTextBox.text for bubbleTextBox in self.bubbleTextBoxes.values() ]
-        translatedStrings = self.translator.translate(listOfStrings, fromLang=fromLang, toLang=toLang)
+
+        translatedStrings = self.translator.translate(listOfStrings, toLang=toLang, fromLang=fromLang)
 
         for i, bubbleTextBox in enumerate(self.bubbleTextBoxes.values()):
             bubbleTextBox.translation = translatedStrings[i]

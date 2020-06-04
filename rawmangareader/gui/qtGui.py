@@ -56,7 +56,6 @@ class MainWindow(QMainWindow):
         self.boxListWidget.itemChanged.connect(self.boxListItemChanged)
         self.boxListWidget.setSelectionMode(QAbstractItemView.SingleSelection)
 
-        self.fromLang = LanguageSelection("From", Driver.getSupportedLanguages())
         self.toLang = LanguageSelection("To", Driver.getSupportedLanguages())
 
         self.oriText = TextDisplay('Text')
@@ -75,7 +74,6 @@ class MainWindow(QMainWindow):
         vbox.addWidget(self.oriText)
         vbox.addWidget(setTextButton)
         vbox.addWidget(self.transText)
-        vbox.addWidget(self.fromLang)
         vbox.addWidget(self.toLang)
         vbox.addWidget(translateButton)
 
@@ -185,15 +183,13 @@ class MainWindow(QMainWindow):
         boxId = index.row()
         if boxId != -1:
             text = self.oriText.editor.toPlainText()
-            print(boxId, text)
             self.driver.setText(boxId, self.oriText.editor.toPlainText())
 
     def translateButtonClicked(self):
         """Translate all text selected by text box.
         """
-        fromLang = self.fromLang.items.currentText()
         toLang = self.toLang.items.currentText()
-        self.driver.translateTextForAllBoxes(fromLang, toLang)
+        self.driver.translateTextForAllBoxes(toLang)
 
     def loadAndProcessImage(self, imagePath):
         """ Load images and all information.
@@ -207,9 +203,8 @@ class MainWindow(QMainWindow):
 
         # Get the from and to language for translation.
         #
-        fromLang = self.fromLang.items.currentText()
         toLang = self.toLang.items.currentText()
-        loadImageSuccess = self.driver.loadAndProcessImage(imagePath, fromLang, toLang)
+        loadImageSuccess = self.driver.loadAndProcessImage(imagePath, toLang)
 
         if loadImageSuccess:
             # Clean up previous data.
