@@ -7,7 +7,7 @@ class Translator():
 
     @staticmethod
     def getSupportedLanguages():
-        return ['en', 'ja', 'th']
+        return ['en', 'th', 'es']
 
     def __init__(self, subscriptionKey=None):
         self.setSubscriptionKey(subscriptionKey)

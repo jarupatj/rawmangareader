@@ -92,7 +92,7 @@ class Driver():
                 return 0
 
     def getBoxes(self):
-        """Return a cictionary of BubbleText.
+        """Return a dictionary of BubbleText.
         Key is a string of bubble text box id.
         Value is BubbleText box object.
 
