@@ -17,8 +17,6 @@ class Driver():
         self.config = ConfigParser()
         self.config.read('config.ini')
 
-        workingdir = os.getcwd()
-
         useCuda = False
         subscriptionKey = None
         try:
