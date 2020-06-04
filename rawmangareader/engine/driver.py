@@ -119,10 +119,11 @@ class Driver():
     def translateTextForAllBoxes(self, toLang, fromLang='ja'):
         listOfStrings = [ bubbleTextBox.text for bubbleTextBox in self.bubbleTextBoxes.values() ]
 
-        translatedStrings = self.translator.translate(listOfStrings, toLang=toLang, fromLang=fromLang)
+        if len(listOfStrings) > 0:
+            translatedStrings = self.translator.translate(listOfStrings, toLang=toLang, fromLang=fromLang)
 
-        for i, bubbleTextBox in enumerate(self.bubbleTextBoxes.values()):
-            bubbleTextBox.translation = translatedStrings[i]
+            for i, bubbleTextBox in enumerate(self.bubbleTextBoxes.values()):
+                bubbleTextBox.translation = translatedStrings[i]
 
     def setText(self, boxId, text):
         self.bubbleTextBoxes[str(boxId)].text = text
