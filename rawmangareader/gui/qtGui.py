@@ -8,7 +8,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        self.setWindowTitle("PyQt")
+        self.setWindowTitle("Raw manga reader")
 
         self.graphicView = GraphicsView()
         self.setCentralWidget(self.graphicView)

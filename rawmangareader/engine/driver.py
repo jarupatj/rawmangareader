@@ -1,10 +1,11 @@
 import os
 import cv2
+import functools
 from rawmangareader.engine.predict import Predictor
 from rawmangareader.engine.bubbletext import BubbleText
 from rawmangareader.engine.ocr import extractTextFromBox
 from rawmangareader.engine.translation import Translator
-import functools
+from configparser import ConfigParser
 
 class Driver():
     @staticmethod
@@ -13,12 +14,25 @@ class Driver():
 
     def __init__(self):
         super().__init__()
+        self.config = ConfigParser()
+        self.config.read('config.ini')
+
+        workingdir = os.getcwd()
+
+        useCuda = False
+        subscriptionKey = None
+        try:
+            subscriptionKey = self.config.get('Default', 'SubscriptionKey')
+            useCuda = self.config.get('Default', 'UseCuda') == '1'
+        except:
+            pass
+
         self.image_rgb = None
         self.imagePath = None
         self.bubbleTextBoxes = None
-        self.translator = Translator()
-        self.predictor = Predictor()
         self.currentDirectory = None
+        self.predictor = Predictor(useCuda)
+        self.translator = Translator(subscriptionKey)
 
     def hasSubscriptionKey(self):
         return self.translator.hasSubscriptionKey()
@@ -104,9 +118,7 @@ class Driver():
 
     def translateTextForAllBoxes(self, fromLang, toLang):
         listOfStrings = [ bubbleTextBox.text for bubbleTextBox in self.bubbleTextBoxes.values() ]
-        # translatedStrings = self.translator.translate(listOfStrings, fromLang=fromLang, toLang=toLang)
-
-        translatedStrings = [ "Dummy text" for bubbleTextBox in self.bubbleTextBoxes.values() ]
+        translatedStrings = self.translator.translate(listOfStrings, fromLang=fromLang, toLang=toLang)
 
         for i, bubbleTextBox in enumerate(self.bubbleTextBoxes.values()):
             bubbleTextBox.translation = translatedStrings[i]

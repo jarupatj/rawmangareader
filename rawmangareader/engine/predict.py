@@ -13,7 +13,7 @@ class Predictor():
     MODEL_FILE = "rawmangareader\\model\\faster_rcnn_R_50_FPN_3x.yaml"
     OUTPUT_DIR = "rawmangareader\\model"
 
-    def __init__(self):
+    def __init__(self, useCuda=True):
         self.cfg = get_cfg()
         self.cfg.merge_from_file(Predictor.MODEL_FILE)
         self.cfg.DATALOADER.NUM_WORKERS = 2
@@ -25,6 +25,7 @@ class Predictor():
         self.cfg.OUTPUT_DIR = Predictor.OUTPUT_DIR
         self.cfg.MODEL.WEIGHTS = os.path.join(self.cfg.OUTPUT_DIR, "model_final.pth")
         self.cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7   # set the testing threshold for this model
+        self.cfg.MODEL.DEVICE = 'cuda' if useCuda else 'cpu'
 
         self.predictor = DefaultPredictor(self.cfg)
 

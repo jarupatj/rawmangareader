@@ -11,6 +11,7 @@ The project requires
 
 You will need to install [tesseract](https://github.com/tesseract-ocr/tesseract) on your machine
 and make sure that tesseract command is accessible by adding the installed directory to the path.
+You must be able to invoke *tesseract* command
 
 detectron2 is pre-built for windows 10 and CUDA 10.2. The whl file for this prebuilt package is under detectron2_win_cuda10.2 directory.
 You will need to have CUDA 10.2 installed and supported graphic card.
