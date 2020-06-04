@@ -307,6 +307,15 @@ class GraphicsView(QGraphicsView):
 
         QGraphicsView.scrollContentsBy(self, dx, dy)
 
+    def resizeEvent(self, qResizeEvent):
+        for rubberBand in self.rubberBands.values():
+            self.drawBox(rubberBand.id,
+                rubberBand.left,
+                rubberBand.top,
+                rubberBand.width,
+                rubberBand.height)
+        return super().resizeEvent(qResizeEvent)
+
     def showBox(self, id):
         self.rubberBands[id].show()
 
@@ -314,16 +323,15 @@ class GraphicsView(QGraphicsView):
         self.rubberBands[id].hide()
 
     def drawBox(self, id, left, top, width, height):
+        rubberBand = self.rubberBands.get(id)
+        if (rubberBand is None):
+            rubberBand = RubberBand(id, left, top, width, height, QRubberBand.Rectangle, self)
+            self.rubberBands[id] = rubberBand
+
         polygon = self.mapFromScene(left, top, width, height)
         rect = polygon.boundingRect()
-
-        if (self.rubberBands.get(id) is not None):
-            self.rubberBands[id].setGeometry(rect)
-        else:
-            rubberBand = RubberBand(id, QRubberBand.Rectangle, self)
-            rubberBand.setGeometry(rect)
-            rubberBand.show()
-            self.rubberBands[id] = rubberBand
+        rubberBand.setGeometry(rect)
+        rubberBand.show()
 
     def loadImage(self, imagePath):
         for rubberBand in self.rubberBands.values():
@@ -346,9 +354,13 @@ class GraphicsView(QGraphicsView):
         return QGraphicsView.viewportEvent(self, event)
 
 class RubberBand(QRubberBand):
-    def __init__(self, id, shape, parent=None):
+    def __init__(self, id, left, top, width, height, shape, parent=None):
         super(QRubberBand, self).__init__(shape, parent)
         self.id = id
+        self.left = left
+        self.top = top
+        self.width = width
+        self.height = height
         self.installEventFilter(self)
 
     def eventFilter(self, obj, event):
@@ -371,5 +383,3 @@ class RubberBand(QRubberBand):
         painter.drawText(event.rect(), Qt.AlignHCenter | Qt.AlignTop,  self.id)
 
         QRubberBand.paintEvent(self, event)
-
-
