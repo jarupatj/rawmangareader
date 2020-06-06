@@ -26,7 +26,11 @@ You will need to have CUDA 10.2 installed and supported graphic card.
 
 This command below will installed all the dependency including prebuilt detectron2.
 
-`pip install -r requirements.txt`
+```
+pip install cython
+pip install numpy==1.18.4
+pip install -r requirements.txt
+```
 
 For other platform or setup, you will need to compile your own detectron2.
 
