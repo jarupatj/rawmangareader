@@ -1,10 +1,18 @@
 # Raw manga reader
 
+Raw manga reader is a python application for detecting text in a japanese manga and automatically translate them. The application is implemented with machine learning,
+OCR software and machine translation service. For more information on how this work see [How it works](#How-it-works).
+
+## Screenshot
+
+![SampleImage01](doc/sample01.png)
+
 ## Setup
 
 The project requires
+- python 3.7
 - [detectron2](https://github.com/facebookresearch/detectron2)
-- pytorch
+- [pytorch](https://pytorch.org) 1.5
 - [pytesseract](https://github.com/madmaze/pytesseract)
 - opencv
 - pyQt5
@@ -50,6 +58,10 @@ Changing between image might be a bit slow due to the program running ML algorit
 
 You can modify the original text if the what the program detects is incorrect or contains weird character. Then you can click **Translate all text** button to do a translation again.
 
-## Screenshot
+## Contributing
 
-![SampleImage01](doc/sample01.png)
+Send a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
