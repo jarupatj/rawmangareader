@@ -49,3 +49,7 @@ For this project I use [pytesseract](https://github.com/madmaze/pytesseract), wh
 Changing between image might be a bit slow due to the program running ML algorithm to predict where the speech box will be.
 
 You can modify the original text if the what the program detects is incorrect or contains weird character. Then you can click **Translate all text** button to do a translation again.
+
+## Screenshot
+
+![SampleImage01](doc/sample01.png)
