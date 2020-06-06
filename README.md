@@ -5,7 +5,7 @@ OCR software and machine translation service. For more information on how this w
 
 ## Screenshot
 
-![SampleImage01](doc/sample01.png)
+![](doc/sample00.png)
 
 ## Setup
 
@@ -64,4 +64,4 @@ Send a pull request.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
