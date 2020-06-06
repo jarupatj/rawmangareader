@@ -5,7 +5,7 @@ OCR software and machine translation service. For more information on how this w
 
 ## Screenshot
 
-![](doc/sample00.png)
+![](doc/sample00.PNG)
 
 ## Setup
 
