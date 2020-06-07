@@ -3,8 +3,6 @@
 Raw manga reader is a python application for detecting text in a japanese manga and automatically translate them. The application is implemented with machine learning,
 OCR software and machine translation service. For more information on how this work see [How it works](#How-it-works).
 
-## Screenshot
-
 ![](doc/sample00.PNG)
 
 ## Setup
